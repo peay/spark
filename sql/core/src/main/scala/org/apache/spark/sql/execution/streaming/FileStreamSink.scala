@@ -38,7 +38,8 @@ object FileStreamSink extends Logging {
    */
   def hasMetadata(path: Seq[String], hadoopConf: Configuration): Boolean = {
     path match {
-      case Seq(singlePath) =>
+      // Do not check for metadata directory if path has wildcards 
+      case Seq(singlePath) if singlePath.matches("^[^{}*]*$") =>
         try {
           val hdfsPath = new Path(singlePath)
           val fs = hdfsPath.getFileSystem(hadoopConf)
